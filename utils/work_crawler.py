@@ -45,3 +45,44 @@ def get_work_pages(url):
     df['composer'] = composer
     
     return format_work_df(df).reset_index().drop("index", axis=1)
+
+
+
+###################
+# GET SCORE LINKS #
+###################
+
+def get_score_links(soup):
+    links = soup.find_all('a', {'class': 'external text'})
+
+    complete_scores = []
+
+    for link in links:
+        if link.text.lower().strip() in ['complete score']:
+            complete_scores.append(link.get('href'))
+            
+    return complete_scores
+
+
+#################
+# GET PDF LINKS #
+#################
+def get_pdf_link(url):
+    soup = BeautifulSoup(requests.get(url).content)
+    print("SUCCESS:\t", url)
+    return soup.find("span", {"id":"sm_dl_wait"})
+
+
+def get_all_pdf_links(score_links):
+    pdfs = []
+    for score in score_links:
+        score_id = score.split('/')[-1]
+        current_url = "https://imslp.org/wiki/Special:IMSLPDisclaimerAccept/" + score_id
+
+        try:
+            pdfs.append(get_pdf_link(current_url).get("data-id"))
+        except:
+            continue
+
+    return pdfs
+
