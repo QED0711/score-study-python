@@ -1,4 +1,5 @@
 import requests
+import pdb
 import pandas as pd
 from urllib import parse
 from bs4 import BeautifulSoup
@@ -52,7 +53,8 @@ def get_work_pages(url):
 # GET SCORE LINKS #
 ###################
 
-def get_score_links(soup):
+def get_score_links(url):
+    soup = BeautifulSoup(requests.get(url).content)
     links = soup.find_all('a', {'class': 'external text'})
 
     complete_scores = []
@@ -69,7 +71,6 @@ def get_score_links(soup):
 #################
 def get_pdf_link(url):
     soup = BeautifulSoup(requests.get(url).content)
-    print("SUCCESS:\t", url)
     return soup.find("span", {"id":"sm_dl_wait"})
 
 
