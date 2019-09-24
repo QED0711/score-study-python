@@ -4,6 +4,8 @@ import pandas as pd
 from urllib import parse
 from bs4 import BeautifulSoup
 
+user_agent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1"
+
 #################
 # GET NEXT PAGE #
 #################
@@ -35,7 +37,7 @@ def get_work_pages(url):
     dfs = []
     composer = extract_composer_name(url)
     while url:
-        html = requests.get(url, timeout=1).content
+        html = requests.get(url, timeout=1, headers={"User-Agent": user_agent}).content
         table = pd.read_html(html)[0]
         dfs.append(table)
         
@@ -54,7 +56,7 @@ def get_work_pages(url):
 ###################
 
 def get_score_links(url):
-    soup = BeautifulSoup(requests.get(url, timeout=1).content, features='lxml')
+    soup = BeautifulSoup(requests.get(url, timeout=1, headers={"User-Agent": user_agent}).content, features='lxml')
     links = soup.find_all('a', {'class': 'external text'})
 
     complete_scores = []
@@ -70,7 +72,7 @@ def get_score_links(url):
 # GET PDF LINKS #
 #################
 def get_pdf_link(url):
-    soup = BeautifulSoup(requests.get(url, timeout=1).content, features='lxml')
+    soup = BeautifulSoup(requests.get(url, timeout=1, headers={"User-Agent": user_agent}).content, features='lxml')
     return soup.find("span", {"id":"sm_dl_wait"})
 
 
