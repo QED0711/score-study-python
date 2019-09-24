@@ -35,11 +35,11 @@ def get_work_pages(url):
     dfs = []
     composer = extract_composer_name(url)
     while url:
-        html = requests.get(url).content
+        html = requests.get(url, timeout=1).content
         table = pd.read_html(html)[0]
         dfs.append(table)
         
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, features='lxml')
         url = get_next_page(soup)
         
     df = pd.concat(dfs)
@@ -54,7 +54,7 @@ def get_work_pages(url):
 ###################
 
 def get_score_links(url):
-    soup = BeautifulSoup(requests.get(url).content)
+    soup = BeautifulSoup(requests.get(url, timeout=1).content, features='lxml')
     links = soup.find_all('a', {'class': 'external text'})
 
     complete_scores = []
@@ -70,7 +70,7 @@ def get_score_links(url):
 # GET PDF LINKS #
 #################
 def get_pdf_link(url):
-    soup = BeautifulSoup(requests.get(url).content)
+    soup = BeautifulSoup(requests.get(url, timeout=1).content, features='lxml')
     return soup.find("span", {"id":"sm_dl_wait"})
 
 
