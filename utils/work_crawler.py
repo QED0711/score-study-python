@@ -1,6 +1,8 @@
 import requests
 import pdb
 import time
+import pymongo
+from keys import *
 import pandas as pd
 from urllib import parse
 from bs4 import BeautifulSoup
@@ -25,7 +27,7 @@ def get_next_page(current_soup):
 ##################
 
 def format_work_df(df):
-    df['link'] = df['Page Name'].apply(lambda x: "https://imslp.org/wiki/" + x.replace(" ", "_"))
+    df['work_page'] = df['Page Name'].apply(lambda x: "https://imslp.org/wiki/" + x.replace(" ", "_"))
     
     return df
 
@@ -38,8 +40,8 @@ def get_work_pages(url):
     dfs = []
     composer = extract_composer_name(url)
     while url:
-        html = requests.get(url, timeout=1, headers={"User-Agent": user_agent}).content
-        time.sleep(1)
+        html = requests.get(url, timeout=3, headers={"User-Agent": user_agent}).content
+        time.sleep(0.5)
         table = pd.read_html(html)[0]
         dfs.append(table)
         
@@ -58,8 +60,8 @@ def get_work_pages(url):
 ###################
 
 def get_score_links(score_url):
-    soup = BeautifulSoup(requests.get(score_url, timeout=1, headers={"User-Agent": user_agent}).content, features='lxml')
-    time.sleep(1)
+    soup = BeautifulSoup(requests.get(score_url, timeout=3, headers={"User-Agent": user_agent}).content, features='lxml')
+    time.sleep(0.5)
     links = soup.find_all('a', {'class': 'external text'})
 
     complete_scores = []
@@ -75,7 +77,7 @@ def get_score_links(score_url):
 # GET PDF LINKS #
 #################
 def get_pdf_link(url):
-    soup = BeautifulSoup(requests.get(url, timeout=1, headers={"User-Agent": user_agent}).content, features='lxml')
+    soup = BeautifulSoup(requests.get(url, timeout=3, headers={"User-Agent": user_agent}).content, features='lxml')
     return soup.find("span", {"id":"sm_dl_wait"})
 
 
@@ -87,9 +89,38 @@ def get_all_pdf_links(score_links):
 
         try:
             pdfs.append(get_pdf_link(current_url).get("data-id"))
-            time.sleep(1)
+            time.sleep(0.5)
         except:
             continue
 
     return pdfs
+
+
+################
+# SAVE TO MLAB #
+################
+
+def generate_id(entry):
+    entry["_id"] = f"{entry['composer']}-{entry['work_name']}"
+    return entry
+
+uri = f"mongodb://{mlab['username']}:{mlab['password']}@ds151076.mlab.com:51076/score-study-app"
+
+def save_to_mlab(entry):
+    
+    # DB Setup
+    client = pymongo.MongoClient(uri)
+    db = client.get_default_database()
+
+    works = db['works']
+
+    # Preparing data for entry
+    entry = generate_id(entry)
+
+    try:
+        works.insert(entry)
+    except:
+        # if there was an error on inserting, likely due to document already existing
+        # update instead
+        works.update({"_id": entry["_id"]}, entry)
 
