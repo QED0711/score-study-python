@@ -1,5 +1,6 @@
 import requests
 import pdb
+import time
 import pandas as pd
 from urllib import parse
 from bs4 import BeautifulSoup
@@ -38,6 +39,7 @@ def get_work_pages(url):
     composer = extract_composer_name(url)
     while url:
         html = requests.get(url, timeout=1, headers={"User-Agent": user_agent}).content
+        time.sleep(1)
         table = pd.read_html(html)[0]
         dfs.append(table)
         
@@ -55,8 +57,9 @@ def get_work_pages(url):
 # GET SCORE LINKS #
 ###################
 
-def get_score_links(url):
-    soup = BeautifulSoup(requests.get(url, timeout=1, headers={"User-Agent": user_agent}).content, features='lxml')
+def get_score_links(score_url):
+    soup = BeautifulSoup(requests.get(score_url, timeout=1, headers={"User-Agent": user_agent}).content, features='lxml')
+    time.sleep(1)
     links = soup.find_all('a', {'class': 'external text'})
 
     complete_scores = []
@@ -84,6 +87,7 @@ def get_all_pdf_links(score_links):
 
         try:
             pdfs.append(get_pdf_link(current_url).get("data-id"))
+            time.sleep(1)
         except:
             continue
 
