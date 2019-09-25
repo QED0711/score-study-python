@@ -19,7 +19,7 @@ class CrawlPipeline():
             pdfs = get_all_pdf_links(scores)
             row.pdfs = pdfs if len(pdfs) > 0 else None
             
-            if save:
+            if save and row.pdfs:
                 save_to_mlab(row.to_dict())
 
             if max_scores:
