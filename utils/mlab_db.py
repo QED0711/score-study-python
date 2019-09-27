@@ -19,7 +19,8 @@ def save_composer(composer_chart):
     # Preparing data for entry
     data = {
         '_id': extract_composer_name(composer_chart),
-        'composer_url': composer_chart
+        'composer_url': composer_chart,
+        'visited': False
     }
 
     try:
@@ -43,6 +44,7 @@ def get_composers():
 if __name__ == '__main__':
     save_composer("https://imslp.org/index.php?title=Category:Mozart%2C%20Wolfgang%20Amadeus&customcat=ccperson1")
     save_composer("https://imslp.org/index.php?title=Category:Bach%2C%20Johann%20Sebastian&customcat=ccperson1")
+    save_composer("https://imslp.org/index.php?title=Category:Beethoven%2C%20Ludwig%20van&customcat=ccperson1")
     
     print(get_composers())
 
