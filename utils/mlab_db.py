@@ -11,7 +11,7 @@ uri = f"mongodb://{mlab['username']}:{mlab['password']}@ds151076.mlab.com:51076/
 
 def save_composer(composer_chart):
     # DB Setup
-    client = pymongo.MongoClient(uri)
+    client = pymongo.MongoClient(uri, retryWrites=False)
     db = client.get_default_database()
 
     composers = db['composers']
