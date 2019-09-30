@@ -2,6 +2,17 @@ import pandas as pd
 import concurrent.futures
 from work_crawler import get_work_pages, get_score_links, get_all_pdf_links, save_to_mlab
 
+import signal
+
+################
+# SIGNAL SETUP #
+################
+
+def handler(signum, frame):
+    raise RuntimeError
+
+signal.signal(signal.SIGALRM, handler)
+
 class CrawlPipeline():
 
     def __init__(self, composer_chart):
@@ -20,7 +31,13 @@ class CrawlPipeline():
             row.pdfs = pdfs if len(pdfs) > 0 else None
             
             if save and row.pdfs:
-                save_to_mlab(row.to_dict())
+                try:
+                    signal.alarm(5)
+                    save_to_mlab(row.to_dict())
+                    signal.alarm(0)
+                except:
+                    print('skipping')
+                    signal.alarm(0)
 
             if max_scores:
                 if i > max_scores: 
