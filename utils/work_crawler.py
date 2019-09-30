@@ -109,7 +109,7 @@ uri = f"mongodb://{mlab['username']}:{mlab['password']}@ds151076.mlab.com:51076/
 def save_to_mlab(entry):
     
     # DB Setup
-    client = pymongo.MongoClient(uri)
+    client = pymongo.MongoClient(uri, retryWrites=retryWrites)
     db = client.get_default_database()
 
     works = db['works']
