@@ -26,6 +26,7 @@ class CrawlPipeline():
 
     def get_work_pdfs(self, max_scores=None, save=True):
         for i, row in self.works_df.iterrows():
+            print(i)
             scores = get_score_links(row['work_page'])
             pdfs = get_all_pdf_links(scores)
             row.pdfs = pdfs if len(pdfs) > 0 else None
