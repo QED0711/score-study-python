@@ -101,7 +101,8 @@ def get_all_pdf_links(score_links):
 ################
 
 def generate_id(entry):
-    entry["_id"] = f"{entry['composer']}-{entry['work_name']}"
+    # entry["_id"] = f"{entry['composer']}-{entry['work_name']}"
+    entry["_id"] = f"{entry['composer']}-{entry['title']}"
     return entry
 
 uri = f"mongodb://{mlab['username']}:{mlab['password']}@ds151076.mlab.com:51076/score-study-app"
