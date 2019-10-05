@@ -63,10 +63,10 @@ class ProcessComposer():
                 soup = BeautifulSoup(resp.content)
                 pdfs.append(soup.find("span", {"id":"sm_dl_wait"}).get("data-id"))
             except:                
-                time.sleep(2)
+                time.sleep(5)
                 continue
             
-            time.sleep(2)
+            time.sleep(5)
     
         return pdfs
     
