@@ -79,13 +79,12 @@ class ProcessComposer():
             row_dict = row.to_dict()
             
             row_dict["pdfs"] = pdfs
-            print(row_dict)
             if len(pdfs) > 0:
                 self._save_work(row_dict)
 
 
 if __name__ == "__main__":
     for composer in composers:
-        cp = ProcessComposer(composer)
-        cp.run_work_retrieval() 
+        pc = ProcessComposer(composer)
+        pc.run_work_retrieval() 
             
