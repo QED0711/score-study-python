@@ -3,6 +3,9 @@ import sys
 sys.path.append("./utils/")
 sys.path.append("./json/")
 
+import warnings
+warnings.filterwarnings("ignore")
+
 import os
 import json
 import pdb
@@ -12,6 +15,7 @@ import requests
 import pandas as pd
 
 from work_crawler import save_to_mlab
+
 
 #################
 # GET COMPOSERS #
@@ -42,7 +46,7 @@ class ProcessComposer():
         self._create_composer_df(composer_json)
     
     def _get_json(self, composer):
-        with open(f"../json/{composer}.json", "r") as file:
+        with open(f"./json/{composer}.json", "r") as file:
             composer_json = json.load(file)
         return composer_json
     
@@ -83,5 +87,5 @@ class ProcessComposer():
 if __name__ == "__main__":
     for composer in composers:
         cp = ProcessComposer(composer)
-        cp.run_work_retrieval()
+        cp.run_work_retrieval() 
             
