@@ -84,10 +84,6 @@ class ProcessComposer():
             row_dict = row.to_dict()
 
             row_dict["pdfs"] = pdfs
-            
-            if log:
-                print(row_dict)
-                
             if len(pdfs) > 0:
                 self._save_work(row_dict)
 
@@ -96,6 +92,8 @@ if __name__ == "__main__":
     import gc
 
     for composer in composers:
+        import gc
+        
         cp = ProcessComposer(composer)
         cp.run_work_retrieval()
         cp = None
