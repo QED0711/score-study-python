@@ -36,6 +36,19 @@ def is_bytes(resp):
     except:
         return False
 
+def json_range(composers, start=None, stop=None):
+    start_index = 0
+    stop_index = -1
+    
+    if start:
+        start_index = composers.index(start)
+        
+    if stop:
+        stop_index = composers.index(stop) + 1
+        
+    return composers[start_index:stop_index]
+
+
 #####################
 # PROCESS COMPOSERS #
 #####################
@@ -90,6 +103,8 @@ class ProcessComposer():
 
 if __name__ == "__main__":
     import gc
+
+    composers = json_range(composers, start="rossini")
 
     for composer in composers:
         import gc
