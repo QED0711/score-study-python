@@ -104,7 +104,18 @@ class ProcessComposer():
 if __name__ == "__main__":
     import gc
 
-    composers = json_range(composers, start="rossini")
+    composers = sorted(composers)
+
+    try:
+        start = sys.argv[1]
+    except:
+        start = None
+    try:
+        stop = sys.argv[2]
+    except:
+        stop = None
+
+    composers = json_range(composers, start, stop)
 
     for composer in composers:
         import gc
